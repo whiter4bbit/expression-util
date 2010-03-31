@@ -1,5 +1,7 @@
 package info.whiter4bbit.util.expression.ast;
 
+import info.whiter4bbit.util.expression.ast.visitor.Visitor;
+
 /**
  * ConstantAST
  * Date: 31.03.2010

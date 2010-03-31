@@ -1,6 +1,7 @@
 package info.whiter4bbit.util.expression.interpreter;
 
 import info.whiter4bbit.util.expression.ast.*;
+import info.whiter4bbit.util.expression.ast.visitor.Visitor;
 import info.whiter4bbit.util.expression.utils.EvalutionFunction;
 import info.whiter4bbit.util.expression.utils.EvalutionHelpers;
 
@@ -11,7 +12,8 @@ import java.util.*;
  *
  * @author whiter4bbit
  */
-public class EvalutionVisitor extends Visitor{
+@Deprecated
+public class EvalutionVisitor extends Visitor {
 
     private Map<String, ? extends EvalutionFunction> functions = new HashMap<String, EvalutionFunction>();
 

@@ -3,7 +3,9 @@
  * and open the template in the editor.
  */
 
-package info.whiter4bbit.util.expression.ast;
+package info.whiter4bbit.util.expression.ast.visitor;
+
+import info.whiter4bbit.util.expression.ast.*;
 
 /**
  *

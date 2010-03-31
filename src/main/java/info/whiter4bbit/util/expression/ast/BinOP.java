@@ -7,6 +7,7 @@ package info.whiter4bbit.util.expression.ast;
 
 import info.whiter4bbit.util.DataTypes;
 import info.whiter4bbit.util.StringUtils;
+import info.whiter4bbit.util.expression.ast.visitor.Visitor;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -49,6 +50,7 @@ public class BinOP extends AST{
 
     private List<String> stringOperators = Arrays.asList("&");
 
+    @Deprecated
     public DataTypes getType() {
     	DataTypes type = null;
         if(binaryOperators.contains(getOperation())){

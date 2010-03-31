@@ -1,6 +1,6 @@
 package info.whiter4bbit.util.expression.ast;
 
-import info.whiter4bbit.util.DataTypes;
+import info.whiter4bbit.util.expression.ast.visitor.Visitor;
 
 /**
  * UnaryOp

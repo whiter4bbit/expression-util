@@ -5,6 +5,8 @@
 
 package info.whiter4bbit.util.expression.ast;
 
+import info.whiter4bbit.util.expression.ast.visitor.Visitor;
+
 /**
  *
  * @author whiter4bbit

@@ -4,7 +4,7 @@ import info.whiter4bbit.util.expression.ExpressionLexer;
 import info.whiter4bbit.util.expression.ExpressionParser;
 import info.whiter4bbit.util.expression.ParserException;
 import info.whiter4bbit.util.expression.ast.AST;
-import info.whiter4bbit.util.expression.ast.Visitor;
+import info.whiter4bbit.util.expression.ast.visitor.Visitor;
 
 /**
  * EvalExpression

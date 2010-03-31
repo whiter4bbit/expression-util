@@ -2,8 +2,11 @@ package info.whiter4bbit.util.expression.interpreter;
 
 import info.whiter4bbit.util.DataTypes;
 import info.whiter4bbit.util.expression.ast.*;
+import info.whiter4bbit.util.expression.ast.visitor.Visitor;
+import info.whiter4bbit.util.expression.utils.ASTHelper;
 import info.whiter4bbit.util.expression.utils.EvalutionFunction;
 import info.whiter4bbit.util.expression.utils.EvalutionHelpers;
+import static info.whiter4bbit.util.expression.ExpressionConstants.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -14,7 +17,7 @@ import java.util.Map;
  * StandardEvalutionVisitor
  * Date: 31.03.2010
  */
-public class StandardEvalutionVisitor extends Visitor{
+public class StandardEvalutionVisitor extends Visitor {
 
     private Map<String, Object> variables = new HashMap<String, Object>();
 
@@ -39,40 +42,42 @@ public class StandardEvalutionVisitor extends Visitor{
     @Override
     @SuppressWarnings("unchecked")
     public Object visitBinOP(BinOP binOP) {
-        if(binOP.getType()==DataTypes.BOOLEAN){
+        DataTypes dataTypes = ASTHelper.getDataType(binOP);
+        
+        if(dataTypes==DataTypes.BOOLEAN){
             String operation = binOP.getOperation();
-            if (!operation.equals("&&") && !operation.equals("||")) {
+            if (!operation.equals(OP_AND) && !operation.equals(OP_OR)) {
                 Comparable r = (Comparable) binOP.getChild().get(0).visit(this);
                 Comparable l = (Comparable) binOP.getChild().get(1).visit(this);
                 int v = r.compareTo(l);
-                if ("<".equals(operation)) return v < 0;
-                if (">".equals(operation)) return v > 0;
-                if ("<=".equals(operation)) return v <= 0;
-                if (">=".equals(operation)) return v >= 0;
-                if ("!=".equals(operation)) return v != 0;
-                if ("==".equals(operation)) return v == 0;
+                if (OP_LT.equals(operation)) return v < 0;
+                if (OP_GT.equals(operation)) return v > 0;
+                if (OP_LE.equals(operation)) return v <= 0;
+                if (OP_GE.equals(operation)) return v >= 0;
+                if (OP_NEQ.equals(operation)) return v != 0;
+                if (OP_EQ.equals(operation)) return v == 0;
             } else {
                 Boolean r = (Boolean) binOP.getChild().get(0).visit(this);
                 Boolean l = (Boolean) binOP.getChild().get(1).visit(this);
-                if(operation.equals("&&")){
+                if(operation.equals(OP_AND)){
                     return r && l;
                 }
-                if(operation.equals("||")){
+                if(operation.equals(OP_OR)){
                     return r || l;
                 }
             }
         }
-        if(isNumbericType(binOP.getType())){
+        if(isNumbericType(dataTypes)){
             AST p1 = (AST)binOP.getChild().toArray()[0];
             AST p2 = (AST)binOP.getChild().toArray()[1];
 
             return PrimitiveUtils.genericNumberOp( binOP.getOperation(),
                                                    p1.visit(this),
                                                    p2.visit(this),
-                                                   binOP.getType().getTypeName() );
+                                                   dataTypes );
         }
-        if(binOP.getType()==DataTypes.STRING){
-            if("&".equals(binOP.getOperation())){
+        if(dataTypes==DataTypes.STRING){
+            if(OP_CONCAT.equals(binOP.getOperation())){
                 String l = (String) binOP.getChild().get(0).visit(this);
                 String r = (String) binOP.getChild().get(1).visit(this);
                 return l+r;
@@ -111,18 +116,12 @@ public class StandardEvalutionVisitor extends Visitor{
 
     @Override
     public Object visitUnaryOp(UnaryOpAST unaryOp) {
-        if("-".equals(unaryOp.getOp())){
-            Object val = unaryOp.getExpression().visit(this);
-            DataTypes type = null;
-            if(val.getClass()==Long.class){
-                type = DataTypes.LONG;
-            }
-            if(val.getClass()==Double.class){
-                type = DataTypes.DOUBLE;
-            }
-            return PrimitiveUtils.genericNumberOp("-", 0L, val, type);
+        if(OP_UNARY_MINUS.equals(unaryOp.getOp())){
+            AST express = unaryOp.getExpression();
+            DataTypes type = ASTHelper.getDataType(express);
+            return PrimitiveUtils.genericNumberOp(OP_UNARY_MINUS, 0L, express.visit(this), type);
         }
-        if("!".equals(unaryOp.getOp())){
+        if(OP_UNARY_NEG.equals(unaryOp.getOp())){
             return !(Boolean)unaryOp.getExpression().visit(this);
         }
         return null;
@@ -136,8 +135,8 @@ public class StandardEvalutionVisitor extends Visitor{
     private static Map<String, Object> constants = new HashMap<String, Object>();
 
     static {
-        constants.put("true", Boolean.TRUE);
-        constants.put("false", Boolean.FALSE);
+        constants.put(CONST_TRUE, Boolean.TRUE);
+        constants.put(CONST_FALSE, Boolean.FALSE);
     }
 
     @Override

@@ -6,6 +6,7 @@
 package info.whiter4bbit.util.expression.interpreter;
 
 import info.whiter4bbit.util.expression.ast.*;
+import info.whiter4bbit.util.expression.ast.visitor.Visitor;
 
 import java.util.Collections;
 import java.util.HashSet;
@@ -15,7 +16,7 @@ import java.util.Set;
  *
  * @author whiter4bbit
  */
-public class VariablesVisitor extends Visitor{
+public class VariablesVisitor extends Visitor {
 
     private Set<String> variables = Collections.synchronizedSet(new HashSet<String>());
 
