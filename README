@@ -1,0 +1,9 @@
+Expression-util
+
+Expression evaluation library for Java.
+Features:
+	- lazy evaluation
+	- api for custom functions adding
+	- long, double, boolean and string expressions support
+
+
