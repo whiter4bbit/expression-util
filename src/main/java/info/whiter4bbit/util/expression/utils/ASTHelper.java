@@ -13,6 +13,13 @@ import static info.whiter4bbit.util.expression.ExpressionConstants.*;
 public class ASTHelper {
 
     private static class DataTypesVisitor extends DefaultVisitor {
+    	
+    	private Map<String, Object> variables = new HashMap<String, Object>();
+    	
+    	public void setVariables(Map<String, Object> variables) {
+			this.variables = variables;
+		}
+    	
         @Override
         public DataTypes visit(AST ast) {
             return DataTypes.NONE;
@@ -53,6 +60,15 @@ public class ASTHelper {
         public DataTypes visitNumber(NumberAST number) {
             return number.getType();
         }
+        
+        @Override
+        public DataTypes visitVariable(VariableAST variableAST) {
+        	String name = variableAST.getName();
+        	if(variables.get(name) instanceof Double) return DataTypes.DOUBLE;        		         	
+        	if(variables.get(name) instanceof Long) return DataTypes.LONG;
+        	if(variables.get(name) instanceof String) return DataTypes.STRING;
+        	return DataTypes.NONE;
+        }
     }
 
     private static DataTypesVisitor visitor = new DataTypesVisitor();
@@ -60,5 +76,10 @@ public class ASTHelper {
     public static DataTypes getDataType(AST ast){
         return (DataTypes)ast.visit(visitor);
     }
+    
+    public static DataTypes getDataType(AST ast, Map<String, Object> vars){
+    	visitor.setVariables(vars);
+        return (DataTypes)ast.visit(visitor);
+    }    
 
 }

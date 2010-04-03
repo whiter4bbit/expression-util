@@ -43,7 +43,7 @@ public class StandardEvaluationVisitor extends Visitor {
     @Override
     @SuppressWarnings("unchecked")
     public Object visitBinOP(BinOP binOP) {
-        DataTypes dataTypes = ASTHelper.getDataType(binOP);
+        DataTypes dataTypes = ASTHelper.getDataType(binOP, variables);
         
         if(dataTypes==DataTypes.BOOLEAN){
             String operation = binOP.getOperation();
@@ -71,7 +71,7 @@ public class StandardEvaluationVisitor extends Visitor {
         if(isNumbericType(dataTypes)){
             AST p1 = (AST)binOP.getChild().toArray()[0];
             AST p2 = (AST)binOP.getChild().toArray()[1];
-
+            
             return PrimitiveUtils.genericNumberOp( binOP.getOperation(),
                                                    p1.visit(this),
                                                    p2.visit(this),
