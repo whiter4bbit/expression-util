@@ -11,7 +11,7 @@ import junit.framework.TestCase;
  */
 public class StandardEvalutionVisitorArithmTest extends TestCase{
 
-    private StandardEvalutionVisitor visitor = new StandardEvalutionVisitor();
+    private StandardEvaluationVisitor visitor = new StandardEvaluationVisitor();
 
     public void testVisitBinOP() throws Exception {
         BinOP binOP = new BinOP("+", new NumberAST("2"), new BinOP("*", new NumberAST("2"), new NumberAST("2"))); //2+2*2

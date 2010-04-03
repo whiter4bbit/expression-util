@@ -11,7 +11,8 @@ import info.whiter4bbit.util.expression.ExpressionParser;
 import info.whiter4bbit.util.expression.ParserException;
 import info.whiter4bbit.util.expression.ast.AST;
 import info.whiter4bbit.util.expression.ast.visitor.Visitor;
-import info.whiter4bbit.util.expression.utils.EvalutionFunction;
+import info.whiter4bbit.util.expression.utils.EvaluationFunction;
+import info.whiter4bbit.util.expression.utils.PrimitiveUtils;
 
 import java.util.*;
 
@@ -31,10 +32,10 @@ public class ExpressionEvalution {
         this.parser =  new ExpressionParser(new ExpressionLexer(expression));
     }
 
-    private Map<String, EvalutionFunction> functions = new HashMap<String, EvalutionFunction>();
+    private Map<String, EvaluationFunction> functions = new HashMap<String, EvaluationFunction>();
 
     {
-        functions.put("fact", new EvalutionFunction(){
+        functions.put("fact", new EvaluationFunction(){
             
             private Long f(Long n){
                 if(n<=1) return 1L;
@@ -53,7 +54,7 @@ public class ExpressionEvalution {
             }
         });
 
-        functions.put("abs", new EvalutionFunction(){
+        functions.put("abs", new EvaluationFunction(){
             @Override
             public Object handle(List<? extends Object> parameters) {
                 return Math.abs((Double)PrimitiveUtils.genericNumberCast(parameters.get(0), "double"));

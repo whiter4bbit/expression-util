@@ -1,7 +1,6 @@
 package info.whiter4bbit.util.expression.interpreter;
 
-import info.whiter4bbit.util.expression.utils.EvalutionFunction;
-
+import info.whiter4bbit.util.expression.utils.EvaluationFunction;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -12,27 +11,20 @@ import java.util.Map;
  */
 public class PredefinedFunctions {
 
-    public static String UNARY_MINUS = "unary_minus";
+    public static final String FACTORIAL = "fact";
     
-    private static Map<String, EvalutionFunction> functions = new HashMap<String, EvalutionFunction>();
-
-    static {
-        functions.put(UNARY_MINUS, new EvalutionFunction(){
-            @Override
-            public Object handle(List<? extends Object> parameters) {
-                Object value = parameters.get(0);
-                if(value instanceof Double){
-                    return -(Double)value;
-                }
-                if(value instanceof Long){
-                    return -(Long)value;
-                }
-                return null;
-            }
-        });
+    static class Fact extends EvaluationFunction{
+    	@Override
+    	public Object handle(List<? extends Object> parameters) {
+    		return null;
+    	}
     }
+    
+    private static Map<String, EvaluationFunction> functions = new HashMap<String, EvaluationFunction>(){{
+    	put(FACTORIAL, new Fact());
+    }};
 
-    public static void contribute(Map funcs){
+    public static void contribute(Map<String, EvaluationFunction> funcs){
         funcs.putAll(functions);
     }
 

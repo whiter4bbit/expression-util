@@ -4,7 +4,7 @@ import info.whiter4bbit.util.expression.ast.ConstantAST;
 import info.whiter4bbit.util.expression.ast.FuncCallAST;
 import info.whiter4bbit.util.expression.ast.FuncParamAST;
 import info.whiter4bbit.util.expression.ast.LiteralAST;
-import info.whiter4bbit.util.expression.utils.EvalutionFunction;
+import info.whiter4bbit.util.expression.utils.EvaluationFunction;
 import junit.framework.TestCase;
 
 import java.util.*;
@@ -15,12 +15,12 @@ import java.util.*;
  */
 public class StandardEvalutionVisitorFuncTest extends TestCase{
 
-    private StandardEvalutionVisitor visitor = new StandardEvalutionVisitor();
+    private StandardEvaluationVisitor visitor = new StandardEvaluationVisitor();
 
     @Override
     protected void setUp() throws Exception {
-        Map<String, EvalutionFunction> funcs = new HashMap<String, EvalutionFunction>();
-        funcs.put("if", new EvalutionFunction(){
+        Map<String, EvaluationFunction> funcs = new HashMap<String, EvaluationFunction>();
+        funcs.put("if", new EvaluationFunction(){
             @Override
             public Object handle(List<? extends Object> parameters) {
                 Boolean cond = (Boolean) parameters.get(0);

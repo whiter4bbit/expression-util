@@ -1,7 +1,7 @@
 package info.whiter4bbit.util.expression.evaluation;
 
 import info.whiter4bbit.util.expression.interpreter.EvalutionVisitor;
-import info.whiter4bbit.util.expression.utils.EvalutionFunction;
+import info.whiter4bbit.util.expression.utils.EvaluationFunction;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -14,7 +14,7 @@ public class ExpressionEvaluator {
 
     private Map<String, Object> context = new HashMap<String, Object>();
 
-    private Map<String, EvalutionFunction> functions = new HashMap<String, EvalutionFunction>();
+    private Map<String, EvaluationFunction> functions = new HashMap<String, EvaluationFunction>();
 
     private EvalutionVisitor evalutionVisitor = new EvalutionVisitor(context, functions);
 
@@ -22,13 +22,13 @@ public class ExpressionEvaluator {
 
     }
 
-    public void registerFunction(String name, EvalutionFunction function){
+    public void registerFunction(String name, EvaluationFunction function){
         assert(name!=null && function!=null);
 
         functions.put(name, function);
     }
 
-    public void registerFunctions(Map<String, EvalutionFunction> functions){
+    public void registerFunctions(Map<String, EvaluationFunction> functions){
         assert (functions!=null);
 
         functions.putAll(functions);

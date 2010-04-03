@@ -1,7 +1,6 @@
 package info.whiter4bbit.util.expression.utils;
 
 import info.whiter4bbit.util.expression.interpreter.EvalutionVisitorException;
-import info.whiter4bbit.util.expression.interpreter.PrimitiveUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,7 +12,7 @@ import java.util.List;
 public class EvalutionHelpers {
 
     public static Object callFunction(String functionName,
-                                      EvalutionFunction function,
+                                      EvaluationFunction function,
                                       List<Object> paramsValues){
         int i=0;
         List<Object> filteredVals = new ArrayList<Object>();

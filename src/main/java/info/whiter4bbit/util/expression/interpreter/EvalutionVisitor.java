@@ -2,8 +2,9 @@ package info.whiter4bbit.util.expression.interpreter;
 
 import info.whiter4bbit.util.expression.ast.*;
 import info.whiter4bbit.util.expression.ast.visitor.Visitor;
-import info.whiter4bbit.util.expression.utils.EvalutionFunction;
+import info.whiter4bbit.util.expression.utils.EvaluationFunction;
 import info.whiter4bbit.util.expression.utils.EvalutionHelpers;
+import info.whiter4bbit.util.expression.utils.PrimitiveUtils;
 
 import java.util.*;
 
@@ -15,11 +16,11 @@ import java.util.*;
 @Deprecated
 public class EvalutionVisitor extends Visitor {
 
-    private Map<String, ? extends EvalutionFunction> functions = new HashMap<String, EvalutionFunction>();
+    private Map<String, EvaluationFunction> functions = new HashMap<String, EvaluationFunction>();
 
     private Map<String, Object> context;
 
-    public EvalutionVisitor(Map<String, Object> context, Map<String, ? extends EvalutionFunction> functions){
+    public EvalutionVisitor(Map<String, Object> context, Map<String, EvaluationFunction> functions){
         assert (context!=null && functions!=null);
 
         this.context = context;
@@ -58,7 +59,7 @@ public class EvalutionVisitor extends Visitor {
         for(FuncParamAST paramAST : funcCall.getParams()){
             paramsValues.add(paramAST.visit(this));
         }
-        EvalutionFunction function = functions.get(funcCall.getFuncName());
+        EvaluationFunction function = functions.get(funcCall.getFuncName());
         if(function ==null){
             throw new EvalutionVisitorException("Can't find function with name "+funcCall.getFuncName());
         }
@@ -79,6 +80,6 @@ public class EvalutionVisitor extends Visitor {
     public Object visitUnaryOp(UnaryOpAST unaryOp) {
         Object singl = unaryOp.getExpression().visit(this);
 
-        return functions.get(PredefinedFunctions.UNARY_MINUS).handle(Arrays.asList(singl));
+        return functions.get("-").handle(Arrays.asList(singl));
     }
 }

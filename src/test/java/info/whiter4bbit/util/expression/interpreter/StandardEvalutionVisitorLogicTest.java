@@ -9,7 +9,7 @@ import junit.framework.TestCase;
  */
 public class StandardEvalutionVisitorLogicTest extends TestCase{
 
-    private StandardEvalutionVisitor visitor = new StandardEvalutionVisitor();
+    private StandardEvaluationVisitor visitor = new StandardEvaluationVisitor();
 
     public void testVisitBinOPLogic() throws Exception{
         BinOP op = new BinOP("&&", new ConstantAST("true"), new ConstantAST("false"));

@@ -6,7 +6,9 @@ package info.whiter4bbit.util.expression.interpreter;
  */
 public class EvalutionVisitorException extends RuntimeException{
 
-    public EvalutionVisitorException() {
+	private static final long serialVersionUID = 7960716340138988567L;
+
+	public EvalutionVisitorException() {
     }
 
     public EvalutionVisitorException(String message) {
