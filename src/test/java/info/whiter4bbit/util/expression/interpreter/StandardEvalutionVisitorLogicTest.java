@@ -1,6 +1,10 @@
 package info.whiter4bbit.util.expression.interpreter;
 
-import info.whiter4bbit.util.expression.ast.*;
+import info.whiter4bbit.expression.ast.BinOP;
+import info.whiter4bbit.expression.ast.ConstantAST;
+import info.whiter4bbit.expression.ast.NumberAST;
+import info.whiter4bbit.expression.ast.UnaryOpAST;
+import info.whiter4bbit.expression.interpreter.StandardEvaluationVisitor;
 import junit.framework.TestCase;
 
 /**

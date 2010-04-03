@@ -1,7 +1,7 @@
 package info.whiter4bbit.util.expression.eval.test;
 
 import junit.framework.TestCase;
-import info.whiter4bbit.util.expression.eval.ExpressionEval;
+import info.whiter4bbit.expression.eval.ExpressionEval;
 
 public class ExpressionEvalTest extends TestCase{
 

@@ -1,8 +1,9 @@
 package info.whiter4bbit.util.expression.interpreter;
 
-import info.whiter4bbit.util.DataTypes;
-import info.whiter4bbit.util.expression.ast.BinOP;
-import info.whiter4bbit.util.expression.ast.NumberAST;
+import info.whiter4bbit.common.util.DataTypes;
+import info.whiter4bbit.expression.ast.BinOP;
+import info.whiter4bbit.expression.ast.NumberAST;
+import info.whiter4bbit.expression.interpreter.StandardEvaluationVisitor;
 import junit.framework.TestCase;
 
 /**

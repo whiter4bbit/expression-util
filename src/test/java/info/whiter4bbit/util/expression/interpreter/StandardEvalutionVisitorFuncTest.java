@@ -1,10 +1,11 @@
 package info.whiter4bbit.util.expression.interpreter;
 
-import info.whiter4bbit.util.expression.ast.ConstantAST;
-import info.whiter4bbit.util.expression.ast.FuncCallAST;
-import info.whiter4bbit.util.expression.ast.FuncParamAST;
-import info.whiter4bbit.util.expression.ast.LiteralAST;
-import info.whiter4bbit.util.expression.utils.EvaluationFunction;
+import info.whiter4bbit.expression.ast.ConstantAST;
+import info.whiter4bbit.expression.ast.FuncCallAST;
+import info.whiter4bbit.expression.ast.FuncParamAST;
+import info.whiter4bbit.expression.ast.LiteralAST;
+import info.whiter4bbit.expression.interpreter.StandardEvaluationVisitor;
+import info.whiter4bbit.expression.utils.EvaluationFunction;
 import junit.framework.TestCase;
 
 import java.util.*;
