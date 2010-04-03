@@ -7,7 +7,6 @@ package info.whiter4bbit.util;
 
 import java.lang.reflect.Field;
 import java.util.Collection;
-import java.util.List;
 
 /**
  * @author whiter4bbit
@@ -26,7 +25,7 @@ public class StringUtils {
         return word;
     }
 
-    public static String join(Collection words, String symb) {
+    public static String join(Collection<?> words, String symb) {
         String[] words_ = new String[words.size()];
         int i=0;
         for(Object w : words){
