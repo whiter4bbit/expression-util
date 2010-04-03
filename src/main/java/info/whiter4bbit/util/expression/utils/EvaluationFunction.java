@@ -13,7 +13,8 @@ public abstract class EvaluationFunction {
 
     public abstract Object handle(List<? extends Object> parameters);
 
-    public Collection<? extends Class> acceptedTypes(int num){
+    @SuppressWarnings("unchecked")
+    public Collection<? extends Class<?>> acceptedTypes(int num){
         return CollectionUtils.set(Double.class, Long.class);
     }
 }

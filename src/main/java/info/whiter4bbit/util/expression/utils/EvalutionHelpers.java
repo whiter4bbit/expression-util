@@ -18,7 +18,7 @@ public class EvalutionHelpers {
         List<Object> filteredVals = new ArrayList<Object>();
 
         for(Object val : paramsValues){
-            Class type = val.getClass();
+            Class<?> type = val.getClass();
             
             if(function.acceptedTypes(i).isEmpty()){
                 throw new EvalutionVisitorException("While loading function "+functionName+" implementation:"+function
@@ -26,7 +26,7 @@ public class EvalutionHelpers {
             }
             
             if(!function.acceptedTypes(i).contains(type)){
-                Class c = function.acceptedTypes(i).iterator().next();
+                Class<?> c = function.acceptedTypes(i).iterator().next();
                 try{
                     Object castedVal = PrimitiveUtils.genericNumberCast(val, c);
                     filteredVals.add(castedVal);
