@@ -15,9 +15,9 @@ public enum DataTypes {
 
     private String name;
 
-    private Class javaDataType;
+    private Class<?> javaDataType;
 
-    DataTypes(String name, Class javaDataType) {
+    DataTypes(String name, Class<?> javaDataType) {
         this.name = name;
         this.javaDataType = javaDataType;
     }
@@ -26,7 +26,7 @@ public enum DataTypes {
         return name;
     }
 
-    public Class getJavaDataType() {
+    public Class<?> getJavaDataType() {
         return javaDataType;
     }
 }
