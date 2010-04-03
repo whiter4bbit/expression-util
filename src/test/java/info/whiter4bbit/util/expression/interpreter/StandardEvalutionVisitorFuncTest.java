@@ -30,7 +30,8 @@ public class StandardEvalutionVisitorFuncTest extends TestCase{
             }
 
             @Override
-            public Collection<? extends Class> acceptedTypes(int num) {
+            @SuppressWarnings("unchecked")
+            public Collection<? extends Class<?>> acceptedTypes(int num) {
                 if(num==0) return Arrays.asList(Boolean.class);
                 if(num>0) return Arrays.asList(String.class);
                 return Arrays.asList();

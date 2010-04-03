@@ -2,6 +2,7 @@ package info.whiter4bbit.util.expression.interpreter;
 
 import info.whiter4bbit.util.expression.utils.EvaluationFunction;
 import info.whiter4bbit.util.expression.utils.PrimitiveUtils;
+import info.whiter4bbit.util.lazy.LazyValue;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -21,6 +22,8 @@ public class PredefinedFunctions {
     public static final String ABS = "abs";
     
     public static final String ROUND = "round";
+    
+    public static final String IF = "if";
     
     static class Fact extends EvaluationFunction{
     	public long fact(long n){
@@ -65,15 +68,33 @@ public class PredefinedFunctions {
     	}
     	@Override
     	@SuppressWarnings("unchecked")
-    	public Collection<? extends Class> acceptedTypes(int num) {
+    	public Collection<? extends Class<?>> acceptedTypes(int num) {
     		return Arrays.asList(Long.class, Double.class);
     	}
+    }
+    
+    static class If extends EvaluationFunction{
+    	@Override
+    	public boolean lazyArguments() { 
+    		return true;    		
+    	}
+    	@Override
+    	public Object handle(List<? extends Object> parameters) {
+    		LazyValue<?> condition = lazyValues().get(0);
+    		if((Boolean)condition.load()){
+    			return lazyValues().get(1).load();
+    		} else {
+    			return lazyValues().get(2).load();
+    		}
+    	}
+    	
     }
    
     private static Map<String, EvaluationFunction> functions = new HashMap<String, EvaluationFunction>(){{
     	put(FACT, new Fact());
     	put(ABS, new Abs());
     	put(ROUND, new Round());
+    	put(IF, new If());
     }};
     
     public static Map<String, EvaluationFunction> getFunctions() {

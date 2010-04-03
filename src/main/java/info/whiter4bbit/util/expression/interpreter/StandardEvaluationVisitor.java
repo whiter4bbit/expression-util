@@ -7,7 +7,11 @@ import info.whiter4bbit.util.expression.utils.ASTHelper;
 import info.whiter4bbit.util.expression.utils.EvaluationFunction;
 import info.whiter4bbit.util.expression.utils.EvalutionHelpers;
 import info.whiter4bbit.util.expression.utils.PrimitiveUtils;
+import info.whiter4bbit.util.lazy.F0;
+import info.whiter4bbit.util.lazy.LazyValue;
+
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -97,18 +101,33 @@ public class StandardEvaluationVisitor extends Visitor {
         return variables.get(variableAST.getName());
     }
 
-    @Override
-    public Object visitFunction(FuncCallAST funcCall) {
-        List<Object> paramsValues = new ArrayList<Object>();
-        for(FuncParamAST paramAST : funcCall.getParams()){
-            paramsValues.add(paramAST.visit(this));
-        }
-        EvaluationFunction function = functions.get(funcCall.getFuncName());
-        if(function ==null){
-            throw new EvalutionVisitorException("Can't find function with name "+funcCall.getFuncName());
-        }
-        return EvalutionHelpers.callFunction(funcCall.getFuncName(), function, paramsValues);
-    }
+	@Override
+	public Object visitFunction(FuncCallAST funcCall) {
+		EvaluationFunction function = functions.get(funcCall.getFuncName());
+		if (function == null) {
+			throw new EvalutionVisitorException(
+					"Can't find function with name " + funcCall.getFuncName());
+		}
+		if (!function.lazyArguments()) {
+			List<Object> paramsValues = new ArrayList<Object>();
+			for (FuncParamAST paramAST : funcCall.getParams()) {
+				paramsValues.add(paramAST.visit(this));
+			}
+			return EvalutionHelpers.callFunction(funcCall.getFuncName(), function, paramsValues);
+		} else {
+			List<LazyValue<?>> values = new ArrayList<LazyValue<?>>();
+			for(final FuncParamAST paramAST : funcCall.getParams()){
+				values.add(LazyValue.create(new F0<Object>() {
+					@Override
+					public Object f() {
+						return paramAST.visit(StandardEvaluationVisitor.this);
+					}
+				}));
+			}
+			function.setLazyValues(values);
+			return function.handle(Arrays.asList());
+		}
+	}
 
     @Override
     public Object visitFuncParam(FuncParamAST funcParam) {

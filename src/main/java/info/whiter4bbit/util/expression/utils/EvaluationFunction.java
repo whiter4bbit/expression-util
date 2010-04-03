@@ -1,6 +1,7 @@
 package info.whiter4bbit.util.expression.utils;
 
 import info.whiter4bbit.util.CollectionUtils;
+import info.whiter4bbit.util.lazy.LazyValue;
 
 import java.util.Collection;
 import java.util.List;
@@ -12,6 +13,20 @@ import java.util.List;
 public abstract class EvaluationFunction {
 
     public abstract Object handle(List<? extends Object> parameters);
+    
+    public boolean lazyArguments(){
+    	return false;
+    }
+    
+    private List<LazyValue<? extends Object>> lazyValues;
+    
+    public List<LazyValue<? extends Object>> lazyValues() {
+		return lazyValues;
+	}
+    
+    public void setLazyValues(List<LazyValue<? extends Object>> lazyValues) {
+		this.lazyValues = lazyValues;
+	}
 
     @SuppressWarnings("unchecked")
     public Collection<? extends Class<?>> acceptedTypes(int num){
