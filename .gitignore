@@ -3,3 +3,5 @@
 *maven*.xml
 .idea
 target/**
+*.iml
+
