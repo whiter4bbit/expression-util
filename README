@@ -6,4 +6,18 @@ Features:
 	- api for custom functions adding
 	- long, double, boolean and string expressions support
 
-
+Installation:
+	You need maven (http://maven.apache.org/)
+	#mvn install
+	After you will have a maven dependency for this project,
+	just add dependency to your project like:
+	<dependencies>
+		...
+		<dependency>
+		    <groupId>info.whiter4bbit</groupId>
+		    <artifactId>expresssion</artifactId>
+		    <version>1.0</version>
+		</dependency>
+		...
+	</dependencies>
+	
