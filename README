@@ -20,4 +20,6 @@ Installation:
 		</dependency>
 		...
 	</dependencies>
+Using:
+	You can view unit tests code (you can find it at src/test/java)
 	
