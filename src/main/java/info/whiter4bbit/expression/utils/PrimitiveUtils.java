@@ -26,13 +26,13 @@ public class PrimitiveUtils {
     }
 
     @SuppressWarnings("unchecked")
-    public static Object genericNumberCast(Object val, Class to){
+    public static<A, C extends Class<A>> A genericNumberCast(Object val, C to){
         String name = "";
         if(Integer.class.equals(to)) name="int";
         if(Long.class.equals(to)) name="long";
         if(Double.class.equals(to)) name="double";
         if(Float.class.equals(to)) name="float";
-        return genericNumberCast(val, name);
+        return (A)genericNumberCast(val, name);
     }
 
 	public static Object genericNumberCast(Object val, String to){

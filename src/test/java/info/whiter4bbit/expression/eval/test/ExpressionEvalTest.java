@@ -2,6 +2,7 @@ package info.whiter4bbit.expression.eval.test;
 
 import junit.framework.TestCase;
 import info.whiter4bbit.expression.eval.ExpressionEval;
+import info.whiter4bbit.expression.utils.VariablesLoader;
 
 public class ExpressionEvalTest extends TestCase{
 
@@ -32,6 +33,26 @@ public class ExpressionEvalTest extends TestCase{
 		
 		val = eval.eval("${expr}&${expr2}&${expr3}");
 		assertEquals("mamamylaramu", val);
+	}
+	
+	public void testVariablesLoader() throws Exception{
+		ExpressionEval eval = new ExpressionEval();
+		eval.setVariablesLoader(new VariablesLoader(){
+			@Override
+			public Object load(String name) {
+				return 1L;
+			}
+		});
+		Object v = eval.eval("${var0}+${var}");
+		assertEquals(2L, v);
+	}
+	
+	public void testString() throws Exception{
+		ExpressionEval eval = new ExpressionEval();
+		eval.registerPredefined();
+		String res = (String)eval.eval("if(true,'all ok!','fail:(')&'<- look at result");
+		
+		assertEquals("all ok!<- look at result", res);
 	}
 	
 }

@@ -16,24 +16,24 @@ import static info.whiter4bbit.expression.ExpressionConstants.*;
  */
 public class ASTHelper {
 
+    private static List<String> stringOperations = Arrays.asList(OP_CONCAT);
+
+    private static List<String> numberOperations = Arrays.asList(OP_PLUS, OP_MINUS, OP_DIV, OP_MUL, OP_POW);
+
+    private static List<String> logicOperations = Arrays.asList(OP_LT, OP_GT, OP_LE, OP_GE, OP_EQ, OP_NEQ, OP_AND, OP_OR);
+	
     private static class DataTypesVisitor extends DefaultVisitor {
     	
-    	private Map<String, Object> variables = new HashMap<String, Object>();
+    	private VariablesLoader loader;
     	
-    	public void setVariables(Map<String, Object> variables) {
-			this.variables = variables;
+    	public void setLoader(VariablesLoader loader) {
+			this.loader = loader;
 		}
     	
         @Override
         public DataTypes visit(AST ast) {
             return DataTypes.NONE;
         }
-
-        private List<String> stringOperations = Arrays.asList(OP_CONCAT);
-
-        private List<String> numberOperations = Arrays.asList(OP_PLUS, OP_MINUS, OP_DIV, OP_MUL, OP_POW);
-
-        private List<String> logicOperations = Arrays.asList(OP_LT, OP_GT, OP_LE, OP_GE, OP_EQ, OP_NEQ, OP_AND, OP_OR);
 
         @Override
         public DataTypes visitBinOP(BinOP binOP) {
@@ -68,9 +68,9 @@ public class ASTHelper {
         @Override
         public DataTypes visitVariable(VariableAST variableAST) {
         	String name = variableAST.getName();
-        	if(variables.get(name) instanceof Double) return DataTypes.DOUBLE;        		         	
-        	if(variables.get(name) instanceof Long) return DataTypes.LONG;
-        	if(variables.get(name) instanceof String) return DataTypes.STRING;
+        	if(loader.load(name) instanceof Double) return DataTypes.DOUBLE;        		         	
+        	if(loader.load(name) instanceof Long) return DataTypes.LONG;
+        	if(loader.load(name) instanceof String) return DataTypes.STRING;
         	return DataTypes.NONE;
         }
     }
@@ -81,9 +81,10 @@ public class ASTHelper {
         return (DataTypes)ast.visit(visitor);
     }
     
-    public static DataTypes getDataType(AST ast, Map<String, Object> vars){
-    	visitor.setVariables(vars);
+    public static DataTypes getDataType(AST ast, VariablesLoader vars){
+    	visitor.setLoader(vars);
         return (DataTypes)ast.visit(visitor);
     }    
+
 
 }

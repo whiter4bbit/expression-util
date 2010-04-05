@@ -10,6 +10,8 @@ import info.whiter4bbit.expression.ast.AST;
 import info.whiter4bbit.expression.interpreter.PredefinedFunctions;
 import info.whiter4bbit.expression.interpreter.StandardEvaluationVisitor;
 import info.whiter4bbit.expression.utils.EvaluationFunction;
+import info.whiter4bbit.expression.utils.PrimitiveUtils;
+import info.whiter4bbit.expression.utils.VariablesLoader;
 
 public class ExpressionEval {
 
@@ -43,10 +45,19 @@ public class ExpressionEval {
 		evaluationVisitor.setVariables(vars);
 	}
 	
+	public void setVariablesLoader(VariablesLoader variablesLoader){
+		evaluationVisitor.setVariablesLoader(variablesLoader);
+	}
+	
 	public Object eval(String expr) throws ParserException{
 		ExpressionParser parser = new ExpressionParser(new ExpressionLexer(expr));
 		AST ast = parser.parse();
 		return ast.visit(evaluationVisitor);
+	}
+	
+	public<A, C extends Class<A>> A eval(String expr, C clazz) throws ParserException{
+		Object obj = eval(expr);		
+		return PrimitiveUtils.genericNumberCast(obj, clazz);
 	}
 	
 }

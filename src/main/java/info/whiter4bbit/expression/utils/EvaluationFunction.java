@@ -12,13 +12,23 @@ import java.util.List;
  */
 public abstract class EvaluationFunction {
 
+    private List<LazyValue<? extends Object>> lazyValues;
+    
+    private VariablesLoader variablesLoader = new VariablesLoader();
+    
+    public void setVariablesLoader(VariablesLoader variablesLoader) {
+		this.variablesLoader = variablesLoader;
+	}
+    
+    protected Object var(String name){
+    	return variablesLoader.load(name);
+    }
+	
     public abstract Object handle(List<? extends Object> parameters);
     
     public boolean lazyArguments(){
     	return false;
     }
-    
-    private List<LazyValue<? extends Object>> lazyValues;
     
     public List<LazyValue<? extends Object>> lazyValues() {
 		return lazyValues;

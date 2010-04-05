@@ -17,6 +17,7 @@ import info.whiter4bbit.expression.utils.ASTHelper;
 import info.whiter4bbit.expression.utils.EvaluationFunction;
 import info.whiter4bbit.expression.utils.EvalutionHelpers;
 import info.whiter4bbit.expression.utils.PrimitiveUtils;
+import info.whiter4bbit.expression.utils.VariablesLoader;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -35,10 +36,21 @@ public class StandardEvaluationVisitor extends Visitor {
     private Map<String, Object> variables = new HashMap<String, Object>();
 
     private Map<String, EvaluationFunction> functions = new HashMap<String, EvaluationFunction>();
+    
+    private VariablesLoader variablesLoader;
 
     public StandardEvaluationVisitor() {
-
+    	variablesLoader = new VariablesLoader(){
+    		@Override
+    		public Object load(String name) {
+    			return variables.get(name);
+    		}
+    	};
     }
+    
+    public void setVariablesLoader(VariablesLoader variablesLoader) {
+		this.variablesLoader = variablesLoader;
+	}
 
     public void setVariables(Map<String, Object> variables) {
         this.variables.putAll(variables);
@@ -55,7 +67,7 @@ public class StandardEvaluationVisitor extends Visitor {
     @Override
     @SuppressWarnings("unchecked")
     public Object visitBinOP(BinOP binOP) {
-        DataTypes dataTypes = ASTHelper.getDataType(binOP, variables);
+        DataTypes dataTypes = ASTHelper.getDataType(binOP, variablesLoader);
         
         if(dataTypes==DataTypes.BOOLEAN){
             String operation = binOP.getOperation();
@@ -63,12 +75,12 @@ public class StandardEvaluationVisitor extends Visitor {
                 Comparable r = (Comparable) binOP.getChild().get(0).visit(this);
                 Comparable l = (Comparable) binOP.getChild().get(1).visit(this);
                 int v = r.compareTo(l);
-                if (OP_LT.equals(operation)) return v < 0;
-                if (OP_GT.equals(operation)) return v > 0;
-                if (OP_LE.equals(operation)) return v <= 0;
-                if (OP_GE.equals(operation)) return v >= 0;
+                if (OP_LT.equals(operation))  return v < 0;
+                if (OP_GT.equals(operation))  return v > 0;
+                if (OP_LE.equals(operation))  return v <= 0;
+                if (OP_GE.equals(operation))  return v >= 0;
                 if (OP_NEQ.equals(operation)) return v != 0;
-                if (OP_EQ.equals(operation)) return v == 0;
+                if (OP_EQ.equals(operation))  return v == 0;
             } else {
                 Boolean r = (Boolean) binOP.getChild().get(0).visit(this);
                 Boolean l = (Boolean) binOP.getChild().get(1).visit(this);
@@ -84,10 +96,7 @@ public class StandardEvaluationVisitor extends Visitor {
             AST p1 = (AST)binOP.getChild().toArray()[0];
             AST p2 = (AST)binOP.getChild().toArray()[1];
             
-            return PrimitiveUtils.genericNumberOp( binOP.getOperation(),
-                                                   p1.visit(this),
-                                                   p2.visit(this),
-                                                   dataTypes );
+            return PrimitiveUtils.genericNumberOp( binOP.getOperation(), p1.visit(this), p2.visit(this), dataTypes );
         }
         if(dataTypes==DataTypes.STRING){
             if(OP_CONCAT.equals(binOP.getOperation())){
@@ -106,16 +115,16 @@ public class StandardEvaluationVisitor extends Visitor {
 
     @Override
     public Object visitVariable(VariableAST variableAST) {
-        return variables.get(variableAST.getName());
+    	return variablesLoader.load(variableAST.getName());
     }
 
 	@Override
 	public Object visitFunction(FuncCallAST funcCall) {
 		EvaluationFunction function = functions.get(funcCall.getFuncName());
 		if (function == null) {
-			throw new EvalutionVisitorException(
-					"Can't find function with name " + funcCall.getFuncName());
+			throw new EvalutionVisitorException("Can't find function with name " + funcCall.getFuncName());
 		}
+		function.setVariablesLoader(variablesLoader);
 		if (!function.lazyArguments()) {
 			List<Object> paramsValues = new ArrayList<Object>();
 			for (FuncParamAST paramAST : funcCall.getParams()) {

@@ -33,7 +33,7 @@ public class PredefinedFunctions {
     	@Override
     	public Object handle(List<? extends Object> parameters) {
     		Object arg = parameters.get(0);
-    		Long val = (Long)PrimitiveUtils.genericNumberCast(arg, Long.class);
+    		Long val = PrimitiveUtils.genericNumberCast(arg, Long.class);
     		return fact(val);
     	}
     	@Override
