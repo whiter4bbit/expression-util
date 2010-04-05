@@ -1,6 +1,8 @@
 package info.whiter4bbit.expression.interpreter;
 
+import info.whiter4bbit.common.util.DataTypes;
 import info.whiter4bbit.common.util.lazy.LazyValue;
+import info.whiter4bbit.expression.utils.ASTHelper;
 import info.whiter4bbit.expression.utils.EvaluationFunction;
 import info.whiter4bbit.expression.utils.PrimitiveUtils;
 
@@ -18,12 +20,12 @@ import java.util.Map;
 public class PredefinedFunctions {
 
     public static final String FACT = "fact";
-    
     public static final String ABS = "abs";
-    
     public static final String ROUND = "round";
-    
     public static final String IF = "if";
+    public static final String MIN = "min";
+    public static final String MAX = "max";
+    public static final String CEIL = "ceil";
     
     static class Fact extends EvaluationFunction{
     	public long fact(long n){
@@ -87,7 +89,61 @@ public class PredefinedFunctions {
     			return lazyValues().get(2).load();
     		}
     	}
-    	
+    }
+
+    static class Min extends EvaluationFunction{
+        @Override
+        @SuppressWarnings("unchecked")
+        public Object handle(List<? extends Object> parameters) {
+            Object param0 = parameters.get(0);
+            Object param1 = parameters.get(1);
+            DataTypes common = ASTHelper.getCommonType(param0, param1);
+            Object param0Common = PrimitiveUtils.genericNumbetCast(param0, common);
+            Object param1Common = PrimitiveUtils.genericNumbetCast(param1, common);
+            if (((Comparable)param0Common).compareTo(param1Common) <= 0) {
+                return param0Common;
+            } else {
+                return param1Common;
+            }
+        }
+        @Override
+        public Collection<? extends Class<?>> acceptedTypes(int num) {
+            return Arrays.asList(Long.class, Double.class);
+        }
+    }
+
+    static class Ceil extends EvaluationFunction {
+        @Override
+        public Object handle(List<? extends Object> parameters) {
+            Object l = parameters.get(0);
+            return Math.ceil(PrimitiveUtils.genericNumberCast(l, Double.class));
+        }
+        @Override
+        public Collection<? extends Class<?>> acceptedTypes(int num) {
+            return Arrays.asList(Long.class, Double.class);
+        }
+    }
+    
+
+    static class Max extends EvaluationFunction{
+        @Override
+        @SuppressWarnings("unchecked")
+        public Object handle(List<? extends Object> parameters) {
+            Object param0 = parameters.get(0);
+            Object param1 = parameters.get(1);
+            DataTypes common = ASTHelper.getCommonType(param0, param1);
+            Object param0Common = PrimitiveUtils.genericNumbetCast(param0, common);
+            Object param1Common = PrimitiveUtils.genericNumbetCast(param1, common);
+            if (((Comparable)param0Common).compareTo(param1Common) >= 0) {
+                return param0Common;
+            } else {
+                return param1Common;
+            }
+        }
+        @Override
+        public Collection<? extends Class<?>> acceptedTypes(int num) {
+            return Arrays.asList(Long.class, Double.class);
+        }
     }
    
     private static Map<String, EvaluationFunction> functions = new HashMap<String, EvaluationFunction>(){{
@@ -95,6 +151,9 @@ public class PredefinedFunctions {
     	put(ABS, new Abs());
     	put(ROUND, new Round());
     	put(IF, new If());
+        put(MIN, new Min());
+        put(MAX, new Max());
+        put(CEIL, new Ceil());
     }};
     
     public static Map<String, EvaluationFunction> getFunctions() {

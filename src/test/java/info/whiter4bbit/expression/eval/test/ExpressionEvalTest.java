@@ -18,6 +18,13 @@ public class ExpressionEvalTest extends TestCase{
 		val = eval.eval("10*10-1000*300+10/2+300/10-200*500/1234-4444444*2222222*1111");
 		assertEquals(-10972837311904994L, val);
 	}
+
+    public void testBigExpressions() throws Exception {
+        String expr = "-2906635.0+5.290056676E10+5634780.0+-2.53213521329638E14+5.3233887366E11+3.579947602E9+4.813973E7+5.32477E7+-2.930267E7+2.0519451E7+4.230184E7+5.326856761E9+3.5745688441E10+5.307618416E9";
+        ExpressionEval eval = new ExpressionEval();
+        Object val = eval.eval(expr);
+        assertEquals(-252578184143802.0, val);
+    }
 	
 	public void testVars() throws Exception{
 		ExpressionEval eval = new ExpressionEval();

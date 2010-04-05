@@ -1,5 +1,6 @@
 package info.whiter4bbit.expression.interpreter;
 
+import info.whiter4bbit.common.util.CommonDataTypes;
 import info.whiter4bbit.common.util.DataTypes;
 import info.whiter4bbit.common.util.lazy.F0;
 import info.whiter4bbit.common.util.lazy.LazyValue;
@@ -74,6 +75,20 @@ public class StandardEvaluationVisitor extends Visitor {
             if (!operation.equals(OP_AND) && !operation.equals(OP_OR)) {
                 Comparable r = (Comparable) binOP.getChild().get(0).visit(this);
                 Comparable l = (Comparable) binOP.getChild().get(1).visit(this);
+
+                DataTypes rClass = DataTypes.getByClass(r.getClass());
+                DataTypes lClass = DataTypes.getByClass(l.getClass());
+
+                if(CommonDataTypes.getByDataType(rClass)!=CommonDataTypes.getByDataType(lClass)){
+                    return false;
+                }
+
+                if(isNumbericType(rClass)){
+                    DataTypes commonType = ASTHelper.getCommonType(r,l);
+                    r = (Comparable)PrimitiveUtils.genericNumbetCast(r, commonType);
+                    l = (Comparable)PrimitiveUtils.genericNumbetCast(l, commonType);
+                }
+                
                 int v = r.compareTo(l);
                 if (OP_LT.equals(operation))  return v < 0;
                 if (OP_GT.equals(operation))  return v > 0;
@@ -99,10 +114,16 @@ public class StandardEvaluationVisitor extends Visitor {
             return PrimitiveUtils.genericNumberOp( binOP.getOperation(), p1.visit(this), p2.visit(this), dataTypes );
         }
         if(dataTypes==DataTypes.STRING){
+            String l = (String) binOP.getChild().get(0).visit(this);
+            String r = (String) binOP.getChild().get(1).visit(this);
             if(OP_CONCAT.equals(binOP.getOperation())){
-                String l = (String) binOP.getChild().get(0).visit(this);
-                String r = (String) binOP.getChild().get(1).visit(this);
                 return l+r;
+            }
+            if(OP_EQ.equals(binOP.getOperation())){
+                return l.equals(r);
+            }
+            if(OP_NEQ.equals(binOP.getOperation())){
+                return !l.equals(r);
             }
         }
         return null;
@@ -120,7 +141,7 @@ public class StandardEvaluationVisitor extends Visitor {
 
 	@Override
 	public Object visitFunction(FuncCallAST funcCall) {
-		EvaluationFunction function = functions.get(funcCall.getFuncName());
+		EvaluationFunction function = functions.get(funcCall.getFuncName().toLowerCase());
 		if (function == null) {
 			throw new EvalutionVisitorException("Can't find function with name " + funcCall.getFuncName());
 		}

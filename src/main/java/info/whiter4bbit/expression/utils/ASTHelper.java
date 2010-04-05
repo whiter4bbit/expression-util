@@ -1,10 +1,7 @@
 package info.whiter4bbit.expression.utils;
 
 import info.whiter4bbit.common.util.DataTypes;
-import info.whiter4bbit.expression.ast.AST;
-import info.whiter4bbit.expression.ast.BinOP;
-import info.whiter4bbit.expression.ast.NumberAST;
-import info.whiter4bbit.expression.ast.VariableAST;
+import info.whiter4bbit.expression.ast.*;
 import info.whiter4bbit.expression.ast.visitor.DefaultVisitor;
 import java.util.*;
 
@@ -20,8 +17,8 @@ public class ASTHelper {
 
     private static List<String> numberOperations = Arrays.asList(OP_PLUS, OP_MINUS, OP_DIV, OP_MUL, OP_POW);
 
-    private static List<String> logicOperations = Arrays.asList(OP_LT, OP_GT, OP_LE, OP_GE, OP_EQ, OP_NEQ, OP_AND, OP_OR);
-	
+    private static List<String> logicOperations = Arrays.asList(OP_LT, OP_GT, OP_LE, OP_GE, OP_AND, OP_OR, OP_EQ, OP_NEQ);
+
     private static class DataTypesVisitor extends DefaultVisitor {
     	
     	private VariablesLoader loader;
@@ -61,10 +58,24 @@ public class ASTHelper {
         }
 
         @Override
+        public Object visitLiteral(LiteralAST literalAST) {
+            return DataTypes.STRING;
+        }
+
+        @Override
         public DataTypes visitNumber(NumberAST number) {
             return number.getType();
         }
-        
+
+        @Override
+        public Object visitUnaryOp(UnaryOpAST unaryOp) {
+            if(unaryOp.getOp().equals(OP_UNARY_MINUS))
+                return DataTypes.DOUBLE;
+            if(unaryOp.getOp().equals(OP_UNARY_NEG))
+                return DataTypes.BOOLEAN;
+            return DataTypes.NONE;                    
+        }
+
         @Override
         public DataTypes visitVariable(VariableAST variableAST) {
         	String name = variableAST.getName();
@@ -80,7 +91,26 @@ public class ASTHelper {
     public static DataTypes getDataType(AST ast){
         return (DataTypes)ast.visit(visitor);
     }
-    
+
+    public static boolean isNumbericType(DataTypes type){
+        return type==DataTypes.LONG || type==DataTypes.INTEGER || type==DataTypes.DOUBLE;
+    }
+
+    public static DataTypes getCommonType(Object...params) {
+        assert params != null;
+        DataTypes currentType = DataTypes.NONE;
+        for (Object param : params) {
+            if( param!=null ){
+                DataTypes dataTypes = DataTypes.getByClass(param.getClass());
+
+                if(currentType!=DataTypes.DOUBLE){
+                    currentType = dataTypes;
+                }
+            }
+        }
+        return currentType;
+    }
+
     public static DataTypes getDataType(AST ast, VariablesLoader vars){
     	visitor.setLoader(vars);
         return (DataTypes)ast.visit(visitor);

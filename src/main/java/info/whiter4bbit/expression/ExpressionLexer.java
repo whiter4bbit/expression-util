@@ -202,11 +202,12 @@ public class ExpressionLexer {
         if(c=='|'){
             return checkNext('|', '|');
         }
+        if(c==' ' || c=='\t' || c=='\n') return lex();
         return new Token("", ERROR);
     }
 
     public static void main(String[] args){
-        String expr = "!(2<3+2)&&!(2+1<20)&&!hasErrors()";
+        String expr = "(2+1 <  20)";
         
         ExpressionLexer lexer = new ExpressionLexer(expr);
         Token tok = null;
